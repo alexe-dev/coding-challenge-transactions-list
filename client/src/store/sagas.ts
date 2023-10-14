@@ -1,6 +1,6 @@
 import { takeEvery } from 'redux-saga/effects';
 import { JsonRpcProvider, Transaction, TransactionResponse, TransactionReceipt, Wallet, parseEther } from 'ethers';
-
+import { navigate } from '../utils';
 import apolloClient from '../apollo/client';
 import { Actions } from '../types';
 import { SaveTransaction } from '../queries';
@@ -58,6 +58,7 @@ function* sendTransaction() {
       mutation: SaveTransaction,
       variables,
     });
+    yield navigate(`/transaction/${receipt.hash}`);
   } catch (error) {
     // TODO: send to sentry or similar
     console.log(error);
