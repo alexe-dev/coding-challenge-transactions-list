@@ -33,7 +33,7 @@ const Navigation: React.FC = () => {
       }
     } catch (error) {
       // TODO: send error to sentry or similar
-      console.error(error);
+      console.log(error);
     }
   }, []);
 

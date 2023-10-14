@@ -5,7 +5,9 @@ import apolloClient from '../apollo/client';
 import { Actions } from '../types';
 import { SaveTransaction } from '../queries';
 
-function* sendTransaction() {
+function* sendTransaction(action: any) {
+  // TODO: add proper type
+
   const provider = new JsonRpcProvider('http://localhost:8545');
 
   // this could have been passed along in a more elegant fashion,
@@ -30,8 +32,8 @@ function* sendTransaction() {
   };
 
   const transaction = {
-    to: randomAddress(),
-    value: parseEther((Math.random() * (10 - 0.5) + 0.5).toString()),
+    to: action.data?.recepient || randomAddress(),
+    value: parseEther(action.data?.amount?.toString() || (Math.random() * (10 - 0.5) + 0.5).toString()),
   };
 
   try {
