@@ -46,16 +46,18 @@ const TransactionList: FC = () => {
         <div className="p-1.5 min-w-full inline-block align-middle">
           {!!transactions.length ? (
             <>
-              {transactions.map(({ hash, to, from, value }) => (
-                <div
-                  key={hash}
-                  className="bg-white shadow-sm p-4 md:p-5 border rounded border-gray-300 mt-3 hover:border-blue-500 cursor-pointer"
-                  onClick={() => handleNavigate(hash)}
-                >
-                  <span className="font-bold">{formatEther(value)} ETH</span> sent from{' '}
-                  <span className="font-bold">{from}</span> to <span className="font-bold">{to}</span>
-                </div>
-              ))}
+              {transactions
+                .map(({ hash, to, from, value }) => (
+                  <div
+                    key={hash}
+                    className="bg-white shadow-sm p-4 md:p-5 border rounded border-gray-300 mt-3 hover:border-blue-500 cursor-pointer"
+                    onClick={() => handleNavigate(hash)}
+                  >
+                    <span className="font-bold">{formatEther(value)} ETH</span> sent from{' '}
+                    <span className="font-bold">{from}</span> to <span className="font-bold">{to}</span>
+                  </div>
+                ))
+                .reverse()}
             </>
           ) : (
             <p>No transactions available yet</p>
