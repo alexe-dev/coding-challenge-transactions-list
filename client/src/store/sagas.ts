@@ -1,5 +1,13 @@
 import { takeEvery } from 'redux-saga/effects';
-import { JsonRpcProvider, Transaction, TransactionResponse, TransactionReceipt, Wallet, parseEther } from 'ethers';
+import {
+  JsonRpcProvider,
+  Transaction,
+  TransactionResponse,
+  TransactionReceipt,
+  parseEther,
+  Signer,
+  BrowserProvider,
+} from 'ethers';
 import { navigate } from '../utils';
 import apolloClient from '../apollo/client';
 import { Actions } from '../types';
@@ -14,14 +22,8 @@ function* sendTransaction(action: any) {
   // but for the purpouses of this scenario it's good enough
   // @ts-ignore
 
-  // copied dev wallet config from generateTranactions.js
-  // otherwise it uses real wallet (metamask)
-
-  const walletFromMnemonic = Wallet.fromPhrase(
-    'myth like bonus scare over problem client lizard pioneer submit female collect'
-  );
-  const signer = new Wallet(walletFromMnemonic.privateKey, provider);
-
+  const walletProvider = new BrowserProvider(window.web3.currentProvider);
+  const signer: Signer = yield walletProvider.getSigner();
   const accounts: Array<{ address: string }> = yield provider.listAccounts();
 
   const randomAddress = () => {
