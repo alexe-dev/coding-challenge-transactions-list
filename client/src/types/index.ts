@@ -18,10 +18,15 @@ export interface SingleTransactionData {
 }
 
 export type Action<P> = {
-  type: Actions,
-  payload: P,
+  type: ActionsEnum;
+  payload: P;
 };
 
-export enum Actions {
+export enum ActionsEnum {
   SendTransaction = 'SEND_TRANSACTION',
+}
+
+export type TransactionPayload = {
+  recipient: string;
+  amount: string;
 };

@@ -10,19 +10,13 @@ import {
 } from 'ethers';
 import { navigate } from '../utils';
 import apolloClient from '../apollo/client';
-import { Actions } from '../types';
+import { Action, ActionsEnum, TransactionPayload } from '../types';
 import { SaveTransaction } from '../queries';
 
-function* sendTransaction(action: any) {
-  // TODO: add proper type
-
+function* sendTransaction({ payload }: Action<TransactionPayload>) {
   const provider = new JsonRpcProvider('http://localhost:8545');
 
-  // this could have been passed along in a more elegant fashion,
-  // but for the purpouses of this scenario it's good enough
-  // @ts-ignore
-
-  const walletProvider = new BrowserProvider(window.web3.currentProvider);
+  const walletProvider = new BrowserProvider(window.ethereum);
   const signer: Signer = yield walletProvider.getSigner();
   const accounts: Array<{ address: string }> = yield provider.listAccounts();
 
@@ -34,8 +28,8 @@ function* sendTransaction(action: any) {
   };
 
   const transaction = {
-    to: action.data?.recepient || randomAddress(),
-    value: parseEther(action.data?.amount?.toString() || (Math.random() * (10 - 0.5) + 0.5).toString()),
+    to: payload?.recipient || randomAddress(),
+    value: parseEther(payload?.amount?.toString() || (Math.random() * (10 - 0.5) + 0.5).toString()),
   };
 
   try {
@@ -47,13 +41,13 @@ function* sendTransaction(action: any) {
 
     const variables = {
       transaction: {
-        gasLimit: (receipt.gasLimit && receipt.gasLimit.toString()) || '0',
-        gasPrice: (receipt.gasPrice && receipt.gasPrice.toString()) || '0',
+        gasLimit: receipt?.gasLimit?.toString() || '0',
+        gasPrice: receipt?.gasPrice?.toString() || '0',
         to: receipt.to,
         from: receipt.from,
-        value: (receipt.value && receipt.value.toString()) || '',
+        value: receipt?.value?.toString() || '',
         data: receipt.data || null,
-        chainId: (receipt.chainId && receipt.chainId.toString()) || '123456',
+        chainId: receipt?.chainId?.toString() || '123456',
         hash: receipt.hash,
       },
     };
@@ -70,5 +64,5 @@ function* sendTransaction(action: any) {
 }
 
 export function* rootSaga() {
-  yield takeEvery(Actions.SendTransaction, sendTransaction);
+  yield takeEvery(ActionsEnum.SendTransaction, sendTransaction);
 }
