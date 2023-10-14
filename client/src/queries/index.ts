@@ -1,32 +1,32 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
+
+const TRANSACTION_FRAGMENT = gql`
+  fragment Transaction on Transaction {
+    gasLimit
+    gasPrice
+    to
+    from
+    value
+    data
+    chainId
+    hash
+  }
+`;
 
 export const GetAllTransactions = gql`
+  ${TRANSACTION_FRAGMENT}
   query GetAllTransactions {
     getAllTransactions {
-      gasLimit
-      gasPrice
-      to
-      from
-      value
-      data
-      chainId
-      hash
-      receipt
+      ...Transaction
     }
   }
 `;
 
 export const GetSingleTransaction = gql`
+  ${TRANSACTION_FRAGMENT}
   query GetSingleTransaction($hash: String!) {
     getTransaction(hash: $hash) {
-      gasLimit
-      gasPrice
-      to
-      from
-      value
-      data
-      chainId
-      hash
+      ...Transaction
     }
   }
 `;
