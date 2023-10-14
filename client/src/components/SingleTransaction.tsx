@@ -1,5 +1,7 @@
 import React from 'react';
 import { useQuery } from '@apollo/client';
+import { formatEther } from 'ethers';
+
 import { GetSingleTransaction } from '../queries';
 import { SingleTransactionData } from '../types';
 import { navigate } from '../utils';
@@ -61,7 +63,7 @@ const SingleTransaction: React.FC<SingleTransactionProps> = ({ id }) => {
             <span className="font-bold">Recipient Address:</span> {to}
           </p>
           <p>
-            <span className="font-bold">Amount:</span> {value} ETH
+            <span className="font-bold">Amount:</span> {value && formatEther(value)} ETH
           </p>
         </div>
       </div>
