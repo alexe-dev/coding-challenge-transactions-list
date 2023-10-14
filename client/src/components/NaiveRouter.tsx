@@ -44,10 +44,4 @@ const NaiveRouter: React.FC = () => {
   return <div>404 Not Found</div>;
 };
 
-export const navigate = (path: string) => {
-  window.history.pushState({}, '', path);
-  const popStateEvent = new PopStateEvent('popstate');
-  window.dispatchEvent(popStateEvent);
-};
-
 export default NaiveRouter;
