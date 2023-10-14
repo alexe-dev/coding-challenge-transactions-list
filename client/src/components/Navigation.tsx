@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Onboard, { WalletState } from '@web3-onboard/core';
 import injectedModule from '@web3-onboard/injected-wallets';
 
@@ -9,6 +9,9 @@ const injected = injectedModule();
 
 const onboard = Onboard({
   wallets: [injected],
+  connect: {
+    autoConnectLastWallet: true,
+  },
   chains: [
     {
       id: '123456',
@@ -19,8 +22,23 @@ const onboard = Onboard({
   ],
 });
 
+const validateWallet = (wallet: WalletState) => wallet?.label === 'MetaMask' && wallet?.accounts[0].address;
+
 const Navigation: React.FC = () => {
   const [wallet, setWallet] = useState<WalletState>();
+
+  useEffect(() => {
+    const wallets = onboard.state.select('wallets');
+    const { unsubscribe } = wallets.subscribe((update) => {
+      const [wallet] = update;
+      if (validateWallet(wallet)) {
+        setWallet(wallet);
+      }
+    });
+    // TODO: vanilla unsubscribe beaks the app (`this` related),
+    // figure out why or use React onboard package instead
+    // return () => unsubscribe();
+  }, []);
 
   const handleConnect = useCallback(async () => {
     try {
@@ -28,7 +46,7 @@ const Navigation: React.FC = () => {
 
       const [metamaskWallet] = wallets;
 
-      if (metamaskWallet?.label === 'MetaMask' && metamaskWallet?.accounts[0].address) {
+      if (validateWallet(metamaskWallet)) {
         setWallet(metamaskWallet);
       }
     } catch (error) {
