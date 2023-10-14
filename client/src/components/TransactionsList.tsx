@@ -9,7 +9,10 @@ import { navigate } from '../utils';
 const TransactionList: FC = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
-  const { loading, error, data } = useQuery<TransactionsData>(GetAllTransactions);
+  const { loading, error, data } = useQuery<TransactionsData>(GetAllTransactions, {
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
+  });
 
   useEffect(() => {
     if (data && data.getAllTransactions) {
