@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { useQuery } from '@apollo/client';
-import { GetAllTransactions } from '../queries';
-import { Transaction, TransactionsData } from '../types';
-import { navigate } from './NaiveRouter';
+import { useState, useEffect, FC } from "react";
+import { useQuery } from "@apollo/client";
+import { GetAllTransactions } from "../queries";
+import { Transaction, TransactionsData } from "../types";
+import { navigate } from "./NaiveRouter";
 
-const TransactionList: React.FC = () => {
+const TransactionList: FC = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   const { loading, error, data } = useQuery<TransactionsData>(GetAllTransactions);
@@ -20,9 +20,7 @@ const TransactionList: React.FC = () => {
   if (loading) {
     return (
       <div className="flex flex-col mt-20">
-        <div className="max-w-[85rem] w-full mx-auto px-4 sm:flex sm:items-center sm:justify-between">
-          Loading...
-        </div>
+        <div className="max-w-[85rem] w-full mx-auto px-4 sm:flex sm:items-center sm:justify-between">Loading...</div>
       </div>
     );
   }
@@ -44,8 +42,13 @@ const TransactionList: React.FC = () => {
           {!!transactions.length ? (
             <>
               {transactions.map(({ hash, to, from, value }) => (
-                <div key={hash} className="bg-white shadow-sm p-4 md:p-5 border rounded border-gray-300 mt-3 hover:border-blue-500 cursor-pointer" onClick={() => handleNavigate(hash)}>
-                  <span className="font-bold">{value} ETH</span> sent from <span className="font-bold">{from}</span> to <span className="font-bold">{to}</span>
+                <div
+                  key={hash}
+                  className="bg-white shadow-sm p-4 md:p-5 border rounded border-gray-300 mt-3 hover:border-blue-500 cursor-pointer"
+                  onClick={() => handleNavigate(hash)}
+                >
+                  <span className="font-bold">{value} ETH</span> sent from <span className="font-bold">{from}</span> to{" "}
+                  <span className="font-bold">{to}</span>
                 </div>
               ))}
             </>
@@ -56,6 +59,6 @@ const TransactionList: React.FC = () => {
       </div>
     </div>
   );
-}
+};
 
 export default TransactionList;
