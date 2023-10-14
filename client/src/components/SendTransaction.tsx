@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { isAddress } from 'ethers';
 
-import { Actions } from '../types';
+import { ActionsEnum, TransactionPayload } from '../types';
 
 const SendTransaction: React.FC = () => {
   const dispatch = useDispatch();
@@ -12,7 +12,7 @@ const SendTransaction: React.FC = () => {
     formState: { errors },
     handleSubmit,
     reset,
-  } = useForm();
+  } = useForm<TransactionPayload>();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
@@ -26,11 +26,10 @@ const SendTransaction: React.FC = () => {
     setIsModalOpen(false);
   };
 
-  const onSubmit = (data: any) => {
-    // TODO: add proper data typing
+  const onSubmit = (data: TransactionPayload) => {
     dispatch({
-      type: Actions.SendTransaction,
-      data,
+      type: ActionsEnum.SendTransaction,
+      payload: data,
     });
     handleCloseModal();
   };
@@ -99,16 +98,16 @@ const SendTransaction: React.FC = () => {
                     id="input-recipient"
                     className="py-3 px-4 block bg-gray-50 border-gray-800 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 w-full"
                     placeholder="Recipient Address"
-                    {...register('recepient', { required: true, validate: { checksum: (v) => isAddress(v) } })}
+                    {...register('recipient', { required: true, validate: { checksum: (v) => isAddress(v) } })}
                   />
-                  {errors.recepient?.type === 'required' && (
+                  {errors.recipient?.type === 'required' && (
                     <p className="text-red-600" role="alert">
-                      Recepient address is required
+                      Recipient address is required
                     </p>
                   )}
-                  {errors.recepient?.type === 'checksum' && (
+                  {errors.recipient?.type === 'checksum' && (
                     <p className="text-red-600" role="alert">
-                      Recepient address is not valid
+                      Recipient address is not valid
                     </p>
                   )}
                   <label htmlFor="input-amount" className="block text-sm font-bold my-2">

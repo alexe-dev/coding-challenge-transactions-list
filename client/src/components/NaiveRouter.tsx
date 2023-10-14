@@ -7,7 +7,7 @@ interface RouteParams {
 }
 
 const NaiveRouter: React.FC = () => {
-  const [route, setRoute] = useState(window.location.pathname);
+  const [route, setRoute] = useState<string>(window.location.pathname);
 
   useEffect(() => {
     const onPopState = () => {
